@@ -1,1 +1,17 @@
-<app-edf-list></app-edf-list>
+<section>
+    <p-toolbar>
+        <ng-template pTemplate="start">
+            <img ngSrc="assets/logo.svg" alt="logo" height="44" width="192"/>
+        </ng-template>
+        <ng-template pTemplate="center">
+        </ng-template>
+        <ng-template pTemplate="end">
+            <div class="flex align-items-center gap-2">
+                <p-avatar image="assets/robert_siket_picture.jpg"
+                          shape="circle"/>
+                <span class="font-bold text-bluegray-50">Robert Siket</span>
+            </div>
+        </ng-template>
+    </p-toolbar>
+    <app-edf-list></app-edf-list>
+</section>

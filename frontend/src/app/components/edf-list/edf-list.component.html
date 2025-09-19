@@ -1,6 +1,4 @@
 <div class="container">
-    <h1 class="p-text-center">EDF File Processor Results</h1>
-
     <div *ngIf="edfFiles$ | async as files; else loading">
         <p-table
                 [value]="files"

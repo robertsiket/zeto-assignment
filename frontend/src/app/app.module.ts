@@ -9,6 +9,9 @@ import { TagModule } from "primeng/tag";
 import { SkeletonModule } from "primeng/skeleton";
 import { TableModule } from "primeng/table";
 import { TooltipModule } from "primeng/tooltip";
+import { ToolbarModule } from "primeng/toolbar";
+import { AvatarModule } from "primeng/avatar";
+import { NgOptimizedImage } from "@angular/common";
 
 @NgModule({
     declarations: [
@@ -23,7 +26,10 @@ import { TooltipModule } from "primeng/tooltip";
         TableModule,
         TagModule,
         SkeletonModule,
-        TooltipModule
+        TooltipModule,
+        ToolbarModule,
+        AvatarModule,
+        NgOptimizedImage
     ],
     providers: [],
     bootstrap: [AppComponent]

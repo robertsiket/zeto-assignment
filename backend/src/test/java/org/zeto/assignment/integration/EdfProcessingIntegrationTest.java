@@ -45,7 +45,7 @@ class EdfProcessingIntegrationTest {
 
         assertEquals(6, fileInfoList.size(), "Expected 6 EDF fileInfoList to be processed from classpath resources");
 
-        assertLastInvalidFile(fileInfoList);
+        assertLastInvalidFiles(fileInfoList);
         assertValidFiles(fileInfoList);
         assertSorting(fileInfoList);
     }
@@ -67,11 +67,16 @@ class EdfProcessingIntegrationTest {
         }
     }
 
-    private static void assertLastInvalidFile(List<FileInfo> fileInfoList) {
+    private static void assertLastInvalidFiles(List<FileInfo> fileInfoList) {
         var lastFile = fileInfoList.getLast();
         assertEquals("invalid2.edf", lastFile.getFileName());
         assertFalse(lastFile.isValid());
         assertNull(lastFile.getRecordingDate(), "Invalid file should not have a recordingDate");
+
+        var beforeLastFile = fileInfoList.get(fileInfoList.size() - 2);
+        assertEquals("invalid.edf", beforeLastFile.getFileName());
+        assertFalse(beforeLastFile.isValid());
+        assertNull(beforeLastFile.getRecordingDate(), "Invalid file should not have a recordingDate");
     }
 
     private static List<FileInfo> getFileInfoList(String content) throws JsonProcessingException {
