@@ -62,9 +62,7 @@ public class ParserServiceImpl implements ParserService {
                            .identifier(generalHeader.getIdentifier())
                            .recordingDate(generalHeader.getRecordingDate())
                            .patientName(generalHeader.getPatientName())
-                           .numberOfChannels(signalHeader.getDataChannelNames().size())
-                           .channelNames(signalHeader.getDataChannelNames())
-                           .channelTransducerTypes(signalHeader.getDataChannelTransducerTypes())
+                           .channels(signalHeader.getChannels())
                            .recordingLengthSeconds(generalHeader.getRecordingLengthSeconds())
                            .numberOfAnnotations(signalHeader.getAnnotationChannelIndex())
                            .build();

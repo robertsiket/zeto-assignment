@@ -19,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.zeto.assignment.models.edf.Channel;
 import org.zeto.assignment.models.edf.GeneralHeader;
 import org.zeto.assignment.models.edf.SignalHeader;
 
@@ -44,11 +45,12 @@ class ParserServiceImplTest {
                                          .recordingDate(LocalDateTime.parse("2025-09-01T10:00:00"))
                                          .numDataRecords(2)
                                          .recordDurationSec(5.0)
-                                         .numSignals(3)
+                                         .numSignals(2)
                                          .build();
 
         when(generalHeaderService.read(any(InputStream.class))).thenReturn(generalHeader);
         when(signalHeaderService.read(any(InputStream.class), eq(generalHeader))).thenReturn(SignalHeader.builder()
+                                                                                                         .numSignals(2)
                                                                                                          .dataChannelNames(of("Fp1", "Fp2"))
                                                                                                          .dataChannelTransducerTypes(of("T1", "T2"))
                                                                                                          .annotationChannelIndex(3)
@@ -62,9 +64,8 @@ class ParserServiceImplTest {
         assertEquals("0IDENT", actualFileInfo.getIdentifier());
         assertEquals("Alice", actualFileInfo.getPatientName());
         assertEquals(LocalDateTime.parse("2025-09-01T10:00:00"), actualFileInfo.getRecordingDate());
-        assertEquals(2, actualFileInfo.getNumberOfChannels());
-        assertEquals(of("Fp1", "Fp2"), actualFileInfo.getChannelNames());
-        assertEquals(of("T1", "T2"), actualFileInfo.getChannelTransducerTypes());
+        assertEquals(2, actualFileInfo.getChannels().size());
+        assertEquals(of(new Channel("Fp1", "T1"), new Channel("Fp2", "T2")), actualFileInfo.getChannels());
         assertEquals(10.0, actualFileInfo.getRecordingLengthSeconds());
         assertEquals(3, actualFileInfo.getNumberOfAnnotations());
     }

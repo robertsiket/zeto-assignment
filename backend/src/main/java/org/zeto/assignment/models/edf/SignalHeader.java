@@ -1,6 +1,7 @@
 package org.zeto.assignment.models.edf;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -18,4 +19,10 @@ public class SignalHeader {
     private final List<String> dataChannelNames;
     private final List<String> dataChannelTransducerTypes;
     private final int annotationChannelIndex;
+
+    public List<Channel> getChannels() {
+        return IntStream.range(0, dataChannelNames.size())
+                        .mapToObj(i -> new Channel(dataChannelNames.get(i), dataChannelTransducerTypes.get(i)))
+                        .toList();
+    }
 }

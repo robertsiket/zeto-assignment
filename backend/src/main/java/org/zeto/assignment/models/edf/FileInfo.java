@@ -18,14 +18,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileInfo {
-    private String fileName;
-    private boolean valid;
-    private String identifier;
+    private List<Channel> channels;
     private LocalDateTime recordingDate;
+    private String fileName;
+    private String identifier;
     private String patientName;
-    private int numberOfChannels;
-    private List<String> channelNames;
-    private List<String> channelTransducerTypes;
+    private boolean valid;
     private double recordingLengthSeconds;
     private int numberOfAnnotations;
 }

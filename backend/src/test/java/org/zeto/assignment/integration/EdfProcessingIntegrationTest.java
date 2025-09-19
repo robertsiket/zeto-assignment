@@ -61,9 +61,7 @@ class EdfProcessingIntegrationTest {
             assertEquals(Boolean.TRUE, fileInfoList.get(i).isValid(), "All valid fileInfo should be marked valid");
             assertNotNull(fileInfoList.get(i).getRecordingDate(), "All valid fileInfo should have a recordingDate");
             assertNotNull(fileInfoList.get(i).getIdentifier(), "All valid fileInfo should have an identifier");
-            assertNotNull(fileInfoList.get(i).getChannelNames(), "All valid fileInfo should have channelNames");
-            assertNotNull(fileInfoList.get(i).getChannelTransducerTypes(), "All valid fileInfo should have channelTransducerTypes");
-            assertTrue(fileInfoList.get(i).getNumberOfChannels() > 0, "All valid fileInfo should have numberOfChannels");
+            assertFalse(fileInfoList.get(i).getChannels().isEmpty(), "All valid fileInfo should have channels");
             assertTrue(fileInfoList.get(i).getNumberOfAnnotations() >= 0, "All valid fileInfo should have a non-negative numberOfAnnotations");
             assertTrue(fileInfoList.get(i).getRecordingLengthSeconds() > 0, "All valid fileInfo should have recordingLengthSeconds");
         }

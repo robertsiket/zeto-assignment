@@ -1,11 +1,10 @@
 export interface FileInfo {
     fileName: string;
-    isValid: boolean;
+    valid: boolean;
     identifier: string;
     recordingDate: string;
     patientName: string;
-    numberOfChannels: number;
-    channelLabels: string[];
+    channelNames: string[];
     recordingLengthSeconds: number;
     numberOfAnnotations: number;
 }
