@@ -3,8 +3,10 @@ package org.zeto.assignment.models.edf;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -13,15 +15,17 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class FileInfo {
-    private final String fileName;
-    private final boolean valid;
-    private final String identifier;
-    private final LocalDateTime recordingDate;
-    private final String patientName;
-    private final int numberOfChannels;
-    private final List<String> channelNames;
-    private final List<String> channelTransducerTypes;
-    private final double recordingLengthSeconds;
-    private final int numberOfAnnotations;
+    private String fileName;
+    private boolean valid;
+    private String identifier;
+    private LocalDateTime recordingDate;
+    private String patientName;
+    private int numberOfChannels;
+    private List<String> channelNames;
+    private List<String> channelTransducerTypes;
+    private double recordingLengthSeconds;
+    private int numberOfAnnotations;
 }
