@@ -1,5 +1,7 @@
 package org.zeto.assignment.models.edf;
 
+import java.time.LocalDateTime;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,7 +16,7 @@ public class GeneralHeader {
     private final double recordDurationSec;
     private final String identifier;
     private final String patientName;
-    private final String recordingDate;
+    private final LocalDateTime recordingDate;
 
     public double getRecordingLengthSeconds() {
         return numDataRecords * recordDurationSec;

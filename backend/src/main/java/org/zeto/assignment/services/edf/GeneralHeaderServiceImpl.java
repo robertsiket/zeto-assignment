@@ -6,6 +6,7 @@ import static java.lang.Integer.parseInt;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 import org.zeto.assignment.models.edf.GeneralHeader;
@@ -69,7 +70,7 @@ public class GeneralHeaderServiceImpl implements GeneralHeaderService {
                             .build();
     }
 
-    private String readRecordingDate(byte[] generalHeader) {
+    private LocalDateTime readRecordingDate(byte[] generalHeader) {
         return formatDate(readAscii(generalHeader, GH_START_DATE_OFFSET, GH_START_DATE_LEN),
                           readAscii(generalHeader, GH_START_TIME_OFFSET, GH_START_TIME_LEN));
     }

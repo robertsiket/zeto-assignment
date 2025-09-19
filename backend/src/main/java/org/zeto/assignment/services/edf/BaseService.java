@@ -2,6 +2,8 @@ package org.zeto.assignment.services.edf;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Provides common utility methods for services involved in processing EDF files.
@@ -47,13 +49,14 @@ public interface BaseService {
      * @return A formatted date-time string in "YYYY-MM-DD HH:MM:SS" format,
      * or the concatenated original date and time strings if formatting fails.
      */
-    default String formatDate(String date, String time) {
+    default LocalDateTime formatDate(String date, String time) {
         try {
             var dateParts = date.split("\\.");
             var year = Integer.parseInt(dateParts[2]) > 84 ? "19" + dateParts[2] : "20" + dateParts[2];
-            return String.format("%s-%s-%s %s", year, dateParts[1], dateParts[0], time.replace('.', ':'));
+            var formattedDateTime = String.format("%s-%s-%s %s", year, dateParts[1], dateParts[0], time.replace('.', ':'));
+            return LocalDateTime.parse(formattedDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         } catch (Exception e) {
-            return date + " " + time;
+            throw new IllegalArgumentException("Invalid date format: " + date + " " + time, e);
         }
     }
 }

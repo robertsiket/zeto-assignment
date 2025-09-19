@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,13 +33,14 @@ class BaseServiceTest {
     @Test
     @DisplayName("formatDate converts DD.MM.YY and HH.MM.SS to YYYY-MM-DD HH:MM:SS")
     void formatDate_ok() {
-        assertEquals("2019-09-19 12:30:00", baseService.formatDate("19.09.19", "12.30.00"));
-        assertEquals("1985-01-02 03:04:05", baseService.formatDate("02.01.85", "03.04.05"));
+        assertEquals(LocalDateTime.parse("2019-09-19T12:30:00"), baseService.formatDate("19.09.19", "12.30.00"));
+        assertEquals(LocalDateTime.parse("1985-01-02T03:04:05"), baseService.formatDate("02.01.85", "03.04.05"));
     }
 
     @Test
-    @DisplayName("formatDate falls back on invalid input")
-    void formatDate_fallback() {
-        assertEquals("bad invalid", baseService.formatDate("bad", "invalid"));
+    @DisplayName("formatDate throws IllegalArgumentException")
+    void formatDate_throwsIllegalArgumentException() {
+        var ex = assertThrows(IllegalArgumentException.class, () -> baseService.formatDate("19.09.19", "12.30"));
+        assertTrue(ex.getMessage().contains("Invalid date format"));
     }
 }

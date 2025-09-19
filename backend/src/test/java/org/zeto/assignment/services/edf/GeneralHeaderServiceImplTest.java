@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +36,7 @@ class GeneralHeaderServiceImplTest {
 
         assertEquals("0VER", generalHeader.getIdentifier());
         assertEquals("John Doe", generalHeader.getPatientName());
-        assertEquals("2025-09-19 12:30:00", generalHeader.getRecordingDate());
+        assertEquals(LocalDateTime.parse("2025-09-19T12:30:00"), generalHeader.getRecordingDate());
         assertEquals(2, generalHeader.getNumDataRecords());
         assertEquals(10.0, generalHeader.getRecordDurationSec());
         assertEquals(3, generalHeader.getNumSignals());

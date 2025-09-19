@@ -1,5 +1,6 @@
 package org.zeto.assignment.models.edf;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.Builder;
@@ -16,7 +17,7 @@ public class FileInfo {
     private final String fileName;
     private final boolean valid;
     private final String identifier;
-    private final String recordingDate;
+    private final LocalDateTime recordingDate;
     private final String patientName;
     private final int numberOfChannels;
     private final List<String> channelNames;

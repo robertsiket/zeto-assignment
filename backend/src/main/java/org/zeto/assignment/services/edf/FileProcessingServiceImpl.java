@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -54,6 +55,8 @@ public class FileProcessingServiceImpl implements FileProcessingService {
                      log.info(LOG_INFO_EDF_FILE_PROCESSED, path.getFileName());
                  });
         }
+
+        processedFiles.sort(Comparator.comparing(FileInfo::getRecordingDate, Comparator.nullsLast(Comparator.naturalOrder())));
     }
 
     @SneakyThrows

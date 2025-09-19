@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ class ParserServiceImplTest {
         var generalHeader = GeneralHeader.builder()
                                          .identifier("0IDENT")
                                          .patientName("Alice")
-                                         .recordingDate("2025-09-01 10:00:00")
+                                         .recordingDate(LocalDateTime.parse("2025-09-01T10:00:00"))
                                          .numDataRecords(2)
                                          .recordDurationSec(5.0)
                                          .numSignals(3)
@@ -60,7 +61,7 @@ class ParserServiceImplTest {
         assertEquals(edtFile.getName(), actualFileInfo.getFileName());
         assertEquals("0IDENT", actualFileInfo.getIdentifier());
         assertEquals("Alice", actualFileInfo.getPatientName());
-        assertEquals("2025-09-01 10:00:00", actualFileInfo.getRecordingDate());
+        assertEquals(LocalDateTime.parse("2025-09-01T10:00:00"), actualFileInfo.getRecordingDate());
         assertEquals(2, actualFileInfo.getNumberOfChannels());
         assertEquals(of("Fp1", "Fp2"), actualFileInfo.getChannelNames());
         assertEquals(of("T1", "T2"), actualFileInfo.getChannelTransducerTypes());
@@ -75,7 +76,7 @@ class ParserServiceImplTest {
         when(generalHeaderService.read(any(InputStream.class))).thenReturn(GeneralHeader.builder()
                                                                                         .identifier("1BAD")
                                                                                         .patientName("Bob")
-                                                                                        .recordingDate("2025-01-01 00:00:00")
+                                                                                        .recordingDate(LocalDateTime.parse("2025-01-01T00:00:00"))
                                                                                         .numDataRecords(1)
                                                                                         .recordDurationSec(1.0)
                                                                                         .numSignals(1)
@@ -95,7 +96,7 @@ class ParserServiceImplTest {
 
         var edtFile = createTempEdtFile();
         var actualFileInfo = parser.parse(edtFile);
-        
+
         assertFalse(actualFileInfo.isValid());
         assertEquals(edtFile.getName(), actualFileInfo.getFileName());
     }
