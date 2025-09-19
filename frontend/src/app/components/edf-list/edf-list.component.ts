@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { FileInfo } from "../../models/edf-file-details.model";
+import { FileInfo } from "../../models/file-info.model";
+import { EdfApiService } from "../../services/edf-api.service";
 
 @Component({
     selector: 'app-edf-list',
@@ -9,12 +9,12 @@ import { FileInfo } from "../../models/edf-file-details.model";
     styleUrls: ['./edf-list.component.scss']
 })
 export class EdfListComponent {
-    private apiUrl = 'http://localhost:8080/api/edf-files';
+    public edfFiles$!: Observable<FileInfo[]>;
 
-    constructor(private http: HttpClient) {
+    constructor(private edfApiService: EdfApiService) {
     }
 
-    getEdfFiles(): Observable<FileInfo[]> {
-        return this.http.get<FileInfo[]>(this.apiUrl);
+    ngOnInit(): void {
+        this.edfFiles$ = this.edfApiService.getEdfFiles();
     }
 }
