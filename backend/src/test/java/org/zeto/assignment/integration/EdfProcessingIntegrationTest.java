@@ -43,7 +43,7 @@ class EdfProcessingIntegrationTest {
 
         List<FileInfo> fileInfoList = getFileInfoList(content);
 
-        assertEquals(5, fileInfoList.size(), "Expected 5 EDF fileInfoList to be processed from classpath resources");
+        assertEquals(6, fileInfoList.size(), "Expected 6 EDF fileInfoList to be processed from classpath resources");
 
         assertLastInvalidFile(fileInfoList);
         assertValidFiles(fileInfoList);
@@ -57,7 +57,7 @@ class EdfProcessingIntegrationTest {
     }
 
     private static void assertValidFiles(List<FileInfo> fileInfoList) {
-        for (int i = 0; i < fileInfoList.size() - 1; i++) {
+        for (int i = 0; i < fileInfoList.size() - 2; i++) {
             assertEquals(Boolean.TRUE, fileInfoList.get(i).isValid(), "All valid fileInfo should be marked valid");
             assertNotNull(fileInfoList.get(i).getRecordingDate(), "All valid fileInfo should have a recordingDate");
             assertNotNull(fileInfoList.get(i).getIdentifier(), "All valid fileInfo should have an identifier");
@@ -69,7 +69,7 @@ class EdfProcessingIntegrationTest {
 
     private static void assertLastInvalidFile(List<FileInfo> fileInfoList) {
         var lastFile = fileInfoList.getLast();
-        assertEquals("invalid.edf", lastFile.getFileName());
+        assertEquals("invalid2.edf", lastFile.getFileName());
         assertFalse(lastFile.isValid());
         assertNull(lastFile.getRecordingDate(), "Invalid file should not have a recordingDate");
     }

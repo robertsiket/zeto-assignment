@@ -43,7 +43,7 @@ class FileProcessingServiceImplTest {
         var files = fileProcessingService.getProcessedFiles();
 
         assertNotNull(files);
-        assertEquals(5, files.size(), "There should be 5 EDF files in resources/edf");
+        assertEquals(6, files.size(), "There should be 6 EDF files in resources/edf");
 
         var actualNames = files.stream().map(FileInfo::getFileName).collect(Collectors.toSet());
         var expectedNames = Set.of(
@@ -51,11 +51,12 @@ class FileProcessingServiceImplTest {
                 "ZE-970-007-593.edf",
                 "ZE-970-009-297.edf",
                 "ZE-970-011-242.edf",
-                "invalid.edf"
+                "invalid.edf",
+                "invalid2.edf"
         );
 
         assertEquals(expectedNames, actualNames);
 
-        verify(parser, times(5)).parse(any(File.class));
+        verify(parser, times(6)).parse(any(File.class));
     }
 }
