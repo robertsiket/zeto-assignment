@@ -8,6 +8,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { TagModule } from "primeng/tag";
 import { SkeletonModule } from "primeng/skeleton";
 import { TableModule } from "primeng/table";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
     declarations: [
@@ -21,7 +22,8 @@ import { TableModule } from "primeng/table";
         BrowserAnimationsModule,
         TableModule,
         TagModule,
-        SkeletonModule
+        SkeletonModule,
+        TooltipModule
     ],
     providers: [],
     bootstrap: [AppComponent]

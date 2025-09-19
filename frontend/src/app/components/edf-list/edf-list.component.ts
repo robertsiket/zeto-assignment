@@ -17,4 +17,8 @@ export class EdfListComponent implements OnInit {
     ngOnInit(): void {
         this.edfFiles$ = this.edfApiService.getEdfFiles();
     }
+
+    getChannels(file: FileInfo): string {
+        return file.channels?.map(channel => `${channel.name} ${channel.type}`).join(', ') || '';
+    }
 }

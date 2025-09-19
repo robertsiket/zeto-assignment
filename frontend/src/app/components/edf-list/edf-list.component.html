@@ -52,8 +52,10 @@
                     <td>{{ file.numberOfAnnotations ?? 'N/A' }}</td>
                     <td>
                         <div *ngIf="file.valid">
-                            <strong>{{ file.numberOfChannels }}</strong>:
-                            <span class="channel-names">{{ file.channelLabels?.join(', ') }}</span>
+                            <p-tag [value]="file.channels?.length"
+                                   [pTooltip]="getChannels(file)"
+                                   [severity]="'info'">
+                            </p-tag>
                         </div>
                         <div *ngIf="!file.valid">N/A</div>
                     </td>
@@ -62,9 +64,6 @@
                                 [value]="file.valid ? 'Valid' : 'Invalid'"
                                 [severity]="file.valid ? 'success' : 'danger'">
                         </p-tag>
-                        <div *ngIf="!file.valid" class="p-error p-mt-2 error-details">
-                            {{ file.statusMessage }}
-                        </div>
                     </td>
                 </tr>
             </ng-template>
