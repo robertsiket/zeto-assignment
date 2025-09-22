@@ -56,7 +56,9 @@ public class FileProcessingServiceImpl implements FileProcessingService {
                  });
         }
 
-        processedFiles.sort(Comparator.comparing(FileInfo::getRecordingDate, Comparator.nullsLast(Comparator.naturalOrder())));
+        processedFiles.sort(Comparator.comparing(FileInfo::getRecordingDate, Comparator.nullsLast(Comparator.naturalOrder()))
+                                      .thenComparing(FileInfo::getFileName)
+        );
     }
 
     @SneakyThrows
