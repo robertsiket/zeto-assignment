@@ -11,6 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.zeto.assignment.models.edf.FileInfo;
 import org.zeto.assignment.services.edf.FileProcessingService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "EDF Files", description = "Operations for EDF file metadata")
 @RestController
 @RequestMapping("/api/edf-files")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -22,6 +31,15 @@ public class EdfController {
         this.edfProcessingService = edfProcessingService;
     }
 
+    @Operation(
+            summary = "List EDF files",
+            description = "Returns a list of processed EDF file metadata sorted by recording date."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List retrieved",
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = FileInfo.class))))
+    })
     @GetMapping
     public List<FileInfo> getAllEdfFiles() {
         return edfProcessingService.getProcessedFiles()

@@ -46,3 +46,18 @@ The backend server will start on `http://localhost:8080`
    ```
 
 The frontend application will be available at `http://localhost:4200`
+
+
+## API Documentation (Swagger/OpenAPI)
+
+The backend is documented using OpenAPI (Swagger) and includes an interactive Swagger UI.
+
+- Start the backend (see steps above) and open Swagger UI:
+  - Swagger UI: http://localhost:8080/swagger-ui.html
+    - If the above does not redirect, try: http://localhost:8080/swagger-ui/index.html
+  - Raw OpenAPI JSON: http://localhost:8080/v3/api-docs
+
+Notes:
+- Endpoints are grouped and described with summaries in the UI.
+- You can try requests directly from the browser using the Try it out button.
+- The API definition is generated automatically at runtime; no extra build steps are required.
