@@ -57,24 +57,57 @@ public class SignalHeaderServiceImpl implements SignalHeaderService {
         var allSignalLabels = readSignalHeaderField(is, generalHeader.getNumSignals(), SH_LABEL_LENGTH);
         var allTransducerTypes = readSignalHeaderField(is, generalHeader.getNumSignals(), SH_TRANSDUCER_LENGTH);
 
-        readSignalHeaderField(is, generalHeader.getNumSignals(), SH_PHYSICAL_DIMENSION_LENGTH);
-        readSignalHeaderField(is, generalHeader.getNumSignals(), SH_PHYSICAL_MIN_LENGTH);
-        readSignalHeaderField(is, generalHeader.getNumSignals(), SH_PHYSICAL_MAX_LENGTH);
-        readSignalHeaderField(is, generalHeader.getNumSignals(), SH_DIGITAL_MIN_LENGTH);
-        readSignalHeaderField(is, generalHeader.getNumSignals(), SH_DIGITAL_MAX_LENGTH);
-        readSignalHeaderField(is, generalHeader.getNumSignals(), SH_PREFILTER_LENGTH);
+        skipUnusedSignalHeaderFields(is, generalHeader.getNumSignals());
 
         var samplesPerRecord = readSignalSamplesPerRecord(is, generalHeader.getNumSignals());
 
-        readBytes(is, generalHeader.getNumSignals() * SH_RESERVED_LENGTH);
+        readReservedLength(is, generalHeader);
 
+        var channelInfo = processSignalChannels(generalHeader.getNumSignals(), allSignalLabels, allTransducerTypes);
+
+        return SignalHeader.builder()
+                           .numSignals(generalHeader.getNumSignals())
+                           .labels(allSignalLabels)
+                           .transducerTypes(allTransducerTypes)
+                           .samplesPerRecord(samplesPerRecord)
+                           .dataChannelNames(channelInfo.dataChannelNames())
+                           .dataChannelTransducerTypes(channelInfo.dataChannelTransducerTypes())
+                           .annotationChannelIndex(
+                                   countAnnotations(is, generalHeader.getNumDataRecords(), samplesPerRecord, channelInfo.annotationChannelIndex()))
+                           .build();
+    }
+
+    private void readReservedLength(InputStream is, GeneralHeader generalHeader) throws IOException {
+        readBytes(is, generalHeader.getNumSignals() * SH_RESERVED_LENGTH);
+    }
+
+    /**
+     * A record to hold the processed information about signal channels.
+     *
+     * @param annotationChannelIndex     the index of the annotation channel, or -1 if not found.
+     * @param dataChannelNames           the list of names for data channels.
+     * @param dataChannelTransducerTypes the list of transducer types for data channels.
+     */
+    private record ProcessedChannelInfo(int annotationChannelIndex, List<String> dataChannelNames,
+                                        List<String> dataChannelTransducerTypes) {
+    }
+
+    /**
+     * Processes signal labels and transducer types to separate data channels from the annotation channel.
+     *
+     * @param numSignals         the total number of signals.
+     * @param allSignalLabels    a list of all signal labels.
+     * @param allTransducerTypes a list of all transducer types.
+     * @return a {@link ProcessedChannelInfo} containing the separated channel information.
+     */
+    private ProcessedChannelInfo processSignalChannels(int numSignals, List<String> allSignalLabels,
+                                                       List<String> allTransducerTypes) {
         var annotationChannelIndex = -1;
         var dataChannelNames = new ArrayList<String>();
         var dataChannelTransducerTypes = new ArrayList<String>();
 
-        for (var i = 0; i < generalHeader.getNumSignals(); i++) {
+        for (var i = 0; i < numSignals; i++) {
             var label = allSignalLabels.get(i);
-
             if (ANNOTATION_CHANNEL_LABEL.equals(label)) {
                 annotationChannelIndex = i;
             } else {
@@ -82,16 +115,23 @@ public class SignalHeaderServiceImpl implements SignalHeaderService {
                 dataChannelTransducerTypes.add(allTransducerTypes.get(i));
             }
         }
+        return new ProcessedChannelInfo(annotationChannelIndex, dataChannelNames, dataChannelTransducerTypes);
+    }
 
-        return SignalHeader.builder()
-                           .numSignals(generalHeader.getNumSignals())
-                           .labels(allSignalLabels)
-                           .transducerTypes(allTransducerTypes)
-                           .samplesPerRecord(samplesPerRecord)
-                           .dataChannelNames(dataChannelNames)
-                           .dataChannelTransducerTypes(dataChannelTransducerTypes)
-                           .annotationChannelIndex(countAnnotations(is, generalHeader.getNumDataRecords(), samplesPerRecord, annotationChannelIndex))
-                           .build();
+    /**
+     * Skips the unused fields in the signal header section of the input stream.
+     *
+     * @param is         the input stream to read from.
+     * @param numSignals the number of signals.
+     * @throws IOException if an I/O error occurs.
+     */
+    private void skipUnusedSignalHeaderFields(InputStream is, int numSignals) throws IOException {
+        readSignalHeaderField(is, numSignals, SH_PHYSICAL_DIMENSION_LENGTH);
+        readSignalHeaderField(is, numSignals, SH_PHYSICAL_MIN_LENGTH);
+        readSignalHeaderField(is, numSignals, SH_PHYSICAL_MAX_LENGTH);
+        readSignalHeaderField(is, numSignals, SH_DIGITAL_MIN_LENGTH);
+        readSignalHeaderField(is, numSignals, SH_DIGITAL_MAX_LENGTH);
+        readSignalHeaderField(is, numSignals, SH_PREFILTER_LENGTH);
     }
 
     private static String readAscii(byte[] source, int offset, int length) {
@@ -129,34 +169,37 @@ public class SignalHeaderServiceImpl implements SignalHeaderService {
      * NUL (0x00) terminators which separate TAL entries. Then skip remaining samples.
      * - This is a lightweight heuristic suitable for a simple count; it does not fully parse TALs.
      */
-    private int countAnnotations(InputStream is, int numDataRecords, List<Integer> samplesPerRecord, int annotationChannelIndex) throws IOException {
+    private int countAnnotations(InputStream inputStream, int numDataRecords, List<Integer> samplesPerChannel, int annotationChannelIndex) throws IOException {
         if (annotationChannelIndex == -1) {
             return 0;
         }
 
-        var annotationCount = 0;
-        var totalSamplesInRecord = samplesPerRecord.stream().mapToInt(Integer::intValue).sum();
-        var samplesBeforeAnnotation = 0;
+        final var samplesBeforeAnnotation = samplesPerChannel.stream()
+                                                             .limit(annotationChannelIndex)
+                                                             .mapToInt(Integer::intValue)
+                                                             .sum();
+        final var annotationSamples = samplesPerChannel.get(annotationChannelIndex);
+        final var totalSamplesInRecord = samplesPerChannel.stream()
+                                                          .mapToInt(Integer::intValue)
+                                                          .sum();
 
-        for (var i = 0; i < annotationChannelIndex; i++) {
-            samplesBeforeAnnotation += samplesPerRecord.get(i);
-        }
+        final var bytesToSkipBefore = samplesBeforeAnnotation * BYTES_PER_SAMPLE;
+        final var bytesInAnnotation = annotationSamples * BYTES_PER_SAMPLE;
+        final var bytesToSkipAfter = (totalSamplesInRecord - samplesBeforeAnnotation - annotationSamples) * BYTES_PER_SAMPLE;
 
-        for (var record = 0; record < numDataRecords; record++) {
-            readBytes(is, samplesBeforeAnnotation * BYTES_PER_SAMPLE);
+        int annotationCount = 0;
 
-            var annotationSamples = samplesPerRecord.get(annotationChannelIndex);
-            var annotationBytes = readBytes(is, annotationSamples * BYTES_PER_SAMPLE);
-
-            for (var annotation : annotationBytes) {
-                if (annotation == TAL_TERMINATOR_BYTE) annotationCount++;
+        for (int record = 0; record < numDataRecords; record++) {
+            readBytes(inputStream, bytesToSkipBefore);
+            final byte[] annotationBytes = readBytes(inputStream, bytesInAnnotation);
+            for (final byte currentByte : annotationBytes) {
+                if (currentByte == TAL_TERMINATOR_BYTE) {
+                    annotationCount++;
+                }
             }
-
-            var samplesAfterAnnotation = totalSamplesInRecord - samplesBeforeAnnotation - annotationSamples;
-
-            readBytes(is, samplesAfterAnnotation * BYTES_PER_SAMPLE);
+            readBytes(inputStream, bytesToSkipAfter);
         }
-
+        
         return annotationCount;
     }
 }
