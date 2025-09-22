@@ -6,7 +6,13 @@ import java.io.InputStream;
 import org.zeto.assignment.models.edf.GeneralHeader;
 
 /**
- * Service responsible for reading and parsing the EDF general header (first 256 bytes).
+ * GeneralHeaderService provides an interface for reading and parsing the general header
+ * section of an EDF (European Data Format) file. The general header contains metadata
+ * about the recording, including the number of data records, number of signals,
+ * record duration, patient information, and the recording date.
+ * <p>
+ * This service ensures that the header data is correctly extracted and converted into
+ * a {@link GeneralHeader} object for further processing or analysis.
  */
 public interface GeneralHeaderService extends BaseService {
     /**

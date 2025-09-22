@@ -3,6 +3,12 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { FileInfo } from "../models/file-info.model";
 
+/**
+ * Service to interact with the backend API for managing EDF files.
+ * Provides methods to retrieve information about EDF files.
+ *
+ * This service is provided at the root level and can be injected into components or other services.
+ */
 @Injectable({
     providedIn: 'root'
 })

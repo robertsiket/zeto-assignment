@@ -7,7 +7,18 @@ import lombok.Builder;
 import lombok.Getter;
 
 /**
- * DTO representing parsed values from EDF per-signal headers.
+ * Represents the header section for signals in an EDF (European Data Format) file.
+ * This header contains metadata related to the signals recorded in the file,
+ * providing information necessary for interpreting the signal data.
+ * <p>
+ * Main functionalities include:
+ * - Storing the number of signals in the file.
+ * - Maintaining lists of signal attributes such as labels, transducer types, and samples per record.
+ * - Defining data channel-specific information, including names and transducer types.
+ * - Keeping track of the index of the annotation channel, if present.
+ * <p>
+ * It also provides a utility method to create a list of {@code Channel} objects,
+ * representing the data channels with their associated names and transducer types.
  */
 @Getter
 @Builder

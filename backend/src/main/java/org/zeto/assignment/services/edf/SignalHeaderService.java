@@ -7,7 +7,18 @@ import org.zeto.assignment.models.edf.GeneralHeader;
 import org.zeto.assignment.models.edf.SignalHeader;
 
 /**
- * Service responsible for reading and parsing EDF per-signal header fields.
+ * A service interface for handling signal header data in EDF (European Data Format) files.
+ * This service enables reading and parsing signal-specific metadata from the EDF file,
+ * which is essential for correctly interpreting the signal data stored in the file.
+ * <p>
+ * The signal header contains attributes such as:
+ * - Signal labels
+ * - Transducer types
+ * - Physical and digital conversion factors
+ * - Number of samples per data record
+ * - Annotation channel indices
+ * <p>
+ * Extends {@link BaseService} to leverage common utility methods for EDF file processing.
  */
 public interface SignalHeaderService extends BaseService {
     /**

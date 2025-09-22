@@ -10,7 +10,19 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * A class to hold the structured information extracted from an EDF file.
+ * Represents metadata about an EDF file, including its associated channels, recording details, and validation status.
+ * <p>
+ * The class provides information about:
+ * - Channels involved in the recording, represented as a list of {@code Channel} objects.
+ * - Date and time when the recording was made.
+ * - File name and a unique identifier for the EDF file.
+ * - Patient name associated with the recording.
+ * - Validation status of the file.
+ * - Total length of the recording, in seconds.
+ * - Number of annotations present in the file.
+ * <p>
+ * This class follows a builder pattern for instantiation, and it includes necessary annotations for
+ * generating boilerplate code like getters and {@code toString} method automatically.
  */
 @Getter
 @Builder

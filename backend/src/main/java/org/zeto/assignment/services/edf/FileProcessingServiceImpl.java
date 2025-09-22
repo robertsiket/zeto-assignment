@@ -3,7 +3,6 @@ package org.zeto.assignment.services.edf;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -76,6 +75,6 @@ public class FileProcessingServiceImpl implements FileProcessingService {
      */
     @Override
     public List<FileInfo> getProcessedFiles() {
-        return Collections.unmodifiableList(processedFiles);
+        return List.copyOf(processedFiles);
     }
 }

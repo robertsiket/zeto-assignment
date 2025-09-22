@@ -16,8 +16,8 @@ import org.zeto.assignment.models.edf.GeneralHeader;
  * and parsing the general header (first 256 bytes) of an EDF file. This service extracts
  * key metadata required to describe the EDF file.
  * <p>
- * The general header includes details such as:
- * - Identifier version of the EDF file format.
+ * The general header includes details such as
+ * - an Identifier version of the EDF file format.
  * - Patient information and name.
  * - Recording date and time.
  * - Number of data records in the file.
@@ -54,7 +54,7 @@ public class GeneralHeaderServiceImpl implements GeneralHeaderService {
      *
      * @param is The InputStream to read the EDF general header data from.
      * @return A GeneralHeader object containing the parsed metadata from the EDF file.
-     * @throws IOException If an I/O error occurs or the InputStream does not contain sufficient data.
+     * @throws IOException If an I/O error occurs, or the InputStream does not contain sufficient data.
      */
     @Override
     public GeneralHeader read(InputStream is) throws IOException {
